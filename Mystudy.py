@@ -20,6 +20,3 @@ if __name__ == '__main__':
     dog = Animal("LISI", 12)
     print(dog.get_name())
     print(dog.get_age())
-
-
-
