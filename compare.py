@@ -1,8 +1,10 @@
 import os
-import sys
-import yaml
+import tkinter as tk
+from datetime import datetime
+from tkinter import filedialog
+
 import pandas as pd
-from pathlib import Path
+import yaml
 
 
 def get_yml_files(folder: str) -> list:
@@ -61,29 +63,46 @@ def generate_comparison_table(folder_path: str, output_file: str = '对比结果
     df.to_excel(output_file, index=False)
     print(f"✅ 对比结果已保存至: {output_file}")
 
-def get_user_input() -> tuple:
-    """获取用户输入的文件夹路径和输出文件名"""
-    print("📂 请输入配置文件所在文件夹路径：")
-    folder = input().strip('"')
-    print("\n📝 请输入差异对比表文件名（无需后缀）：")
-    output = input().strip() + ".xlsx"
-    return folder, output
+def select_folder() -> str:
+    """GUI文件夹选择对话框"""
+    root = tk.Tk()
+    root.withdraw()  # 隐藏主窗口
+    folder = filedialog.askdirectory(
+        title="📂 选择配置文件夹",
+        initialdir=os.getcwd()  # 默认当前路径
+    )
+    return folder.replace('/', '\\')  # Windows路径标准化
 
-def validate_path(folder: str) -> None:
-    """验证路径有效性"""
-    if not os.path.isdir(folder):
-        print(f"❌ 路径无效: {folder}")
-        sys.exit(1)
+def select_output() -> str:
+    """GUI文件保存对话框"""
+    root = tk.Tk()
+    root.withdraw()
+    default_name = f"配置对比_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx"
+    path = filedialog.asksaveasfilename(
+        title="💾 保存对比表",
+        defaultextension=".xlsx",
+        filetypes=[("Excel文件", "*.xlsx")],
+        initialfile=default_name
+    )
+    return path
 
 
 def main():
-    # 用户交互输入
-    folder, output_file = get_user_input()
-    validate_path(folder)
+    # 鼠标选择文件夹
+    folder = select_folder()
+    if not folder:
+        print("❌ 未选择文件夹")
+        return
+
+    # 鼠标选择保存路径
+    output_path = select_output()
+    if not output_path:
+        print("❌ 未指定输出路径")
+        return
 
     # 原对比逻辑（保持不变）
-    generate_comparison_table(folder, output_file)
-    print(f"\n✅ 操作完成！文件已保存至: {os.path.abspath(output_file)}")
+    generate_comparison_table(folder, output_path)
+    print(f"\n✅ 操作完成！文件已保存至: {os.path.abspath(output_path)}")
 
 
 # 使用示例
