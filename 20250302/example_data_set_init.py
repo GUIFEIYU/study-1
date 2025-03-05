@@ -1,5 +1,5 @@
 # encoding: utf-8
-# @File  : data_set_init.py
+# @File  : example_data_set_init.py
 # @Author: GUIFEI
 # @Desc : 数据准备
 # @Date  :  2025/03/05
@@ -19,7 +19,7 @@ def dataInit():
     print(X.shape)
     print(y.shape)
     # 拆分数据集为训练集和测试集
-    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.2, shuffle=True)
+    train_X, test_X, train_y, test_y = train_test_split(X, y, test_size=0.3, shuffle=True)
     # 将生成的数据集保存在本地，在模型训练时，直接加载数据集，避免每次训练的数据都不一样
     np.save("train_X.npy", train_X)
     np.save("test_X.npy", test_X)
