@@ -31,14 +31,14 @@ if __name__ == '__main__':
         z = torch.sigmoid(z)
 
         # 计算损失
-        loss = torch.nn.functional.binary_cross_entropy(z.squeeze(1), train_y, reduction='mean')
+        loss = torch.nn.functional.binary_cross_entropy(z.reshape(-1), train_y, reduction='mean')
 
         # 计算梯度
         loss.backward()
 
         # 更新参数
         # 关闭梯度计算跟踪
-        with torch.autograd.no_grad():
+        with torch.no_grad():
             # 更新权重梯度值
             theta = theta - lr * theta.grad
             # 清空本次计算的梯度（因为梯度是累加计算，不清空就累加, 详情参考pytorch 计算图自动微分的原理)
